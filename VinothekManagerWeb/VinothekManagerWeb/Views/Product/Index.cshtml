@@ -1,0 +1,54 @@
+﻿@model IEnumerable<Product>
+@{
+    ViewData["Title"] = "Index";
+}
+
+@if(TempData["success"] != null)
+{
+    <h2>@TempData["success"]</h2>
+}
+<div class="container p-3">
+    <div class="row p-4">
+        <div class="col-6">
+            <h2 class="text-primary"> Liste Produkte </h2>
+        </div>
+        <div class="col-6 text-end">
+            <a asp-controller="Product" asp-action="Create" class="btn btn-primary"> Produkt hinzufügen </a>
+        </div>
+    </div>
+    <br/>
+<table class="table table-bordered table-striped" style="width:100%">
+    <thead>
+        <tr>
+          <th>Name </th>
+          <th>Art </th>
+          <th>Rebsorten </th>
+          <th>Alkoholgehalt </th>
+          <th>Geschmack </th>
+          <th>Jahrgang </th>
+          <th>Preis </th>
+          <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var obj in Model)
+        {
+            <tr>
+                <td> @obj.Name </td>
+                <td> @obj.Art </td>
+                <td> @obj.Rebsorten </td>
+                <td> @obj.Alkoholgehalt </td>
+                <td> @obj.Geschmack </td>
+                <td> @obj.Jahrgang </td>
+                <td> @obj.Preis </td>
+                <td>
+                    <div class="w-75 btn-group" role="group">
+                        <a asp-controller="Product" asp-action="Edit" asp-route-id="@obj.Id" class="btn btn-primary mx-2"> Bearbeiten </a>
+                        <a asp-controller="Product" asp-action="Delete" asp-route-id="@obj.Id" class="btn btn-danger mx-2"> Löschen </a>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+</div>
