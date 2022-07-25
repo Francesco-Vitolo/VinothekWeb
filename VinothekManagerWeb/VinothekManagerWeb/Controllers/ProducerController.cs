@@ -4,17 +4,17 @@ using VinothekManagerWeb.Models;
 
 namespace VinothekManagerWeb.Controllers
 {
-    public class ProductController : Controller
+    public class ProducerController : Controller
     {
         private readonly VinothekDbContext _ctx;
 
-        public ProductController(VinothekDbContext ctx)
+        public ProducerController(VinothekDbContext ctx)
         {
             _ctx = ctx;
         }
         public IActionResult Index()
         {
-            IEnumerable<ProductModel> prodList = _ctx.Products.ToList();
+            IEnumerable<ProducerModel> prodList = _ctx.Producer.ToList();
             return View(prodList);
         }
 
@@ -22,13 +22,14 @@ namespace VinothekManagerWeb.Controllers
         {
             return View();
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(ProductModel prod)
+        public IActionResult Create(ProducerModel prod)
         {
             if (ModelState.IsValid)
             {
-                _ctx.Products.Add(prod);
+                _ctx.Producer.Add(prod);
                 _ctx.SaveChanges();
                 TempData["success"] = $"{prod.Name} wurde erstellt.";
                 return RedirectToAction("Index");
@@ -38,29 +39,29 @@ namespace VinothekManagerWeb.Controllers
 
         public IActionResult Edit(int? id)
         {
-            if(id == null || id == 0)
+            if (id == null || id == 0)
             {
                 return NotFound();
             }
-            var product = _ctx.Products.Find(id);
+            var producer = _ctx.Producer.Find(id);
 
-            if(product == null)
+            if (producer == null)
             {
                 return NotFound();
             }
-            return View(product);
+            return View(producer);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(ProductModel product)
+        public IActionResult Edit(ProducerModel producer)
         {
             if (ModelState.IsValid)
             {
-                _ctx.Update(product);
+                _ctx.Update(producer);
                 _ctx.SaveChanges();
                 return RedirectToAction("Index");
             }
-            return View(product);
+            return View(producer);
         }
         public IActionResult Delete(int? id)
         {
@@ -68,7 +69,7 @@ namespace VinothekManagerWeb.Controllers
             {
                 return NotFound();
             }
-            var product = _ctx.Products.Find(id);
+            var product = _ctx.Producer.Find(id);
 
             if (product == null)
             {
@@ -80,15 +81,16 @@ namespace VinothekManagerWeb.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult DeletePost(int? id)
         {
-            var product = _ctx.Products.Find(id);
-            if (product == null)
+            var producer = _ctx.Producer.Find(id);
+            if (producer == null)
             {
                 return NotFound();
             }
-            _ctx.Products.Remove(product);
+            _ctx.Producer.Remove(producer);
             _ctx.SaveChanges();
-            TempData["success"] = $"{product.Name} wurde gelöscht.";
+            TempData["success"] = $"{producer.Name} wurde gelöscht.";
             return RedirectToAction("Index");
         }
+
     }
 }
