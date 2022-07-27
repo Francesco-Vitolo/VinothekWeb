@@ -59,6 +59,8 @@ namespace VinothekManagerWeb.Controllers
             {
                 _ctx.Update(producer);
                 _ctx.SaveChanges();
+                TempData["success"] = $"{producer.Name} wurde bearbeitet.";
+
                 return RedirectToAction("Index");
             }
             return View(producer);

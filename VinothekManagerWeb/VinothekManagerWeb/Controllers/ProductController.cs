@@ -14,7 +14,7 @@ namespace VinothekManagerWeb.Controllers
         }
         public IActionResult Index()
         {
-            IEnumerable<ProductModel> prodList = _ctx.Products.ToList();
+            IEnumerable<ProductModel> prodList = _ctx.Product.ToList();
             return View(prodList);
         }
 
@@ -28,7 +28,7 @@ namespace VinothekManagerWeb.Controllers
         {
             if (ModelState.IsValid)
             {
-                _ctx.Products.Add(prod);
+                _ctx.Product.Add(prod);
                 _ctx.SaveChanges();
                 TempData["success"] = $"{prod.Name} wurde erstellt.";
                 return RedirectToAction("Index");
@@ -42,7 +42,7 @@ namespace VinothekManagerWeb.Controllers
             {
                 return NotFound();
             }
-            var product = _ctx.Products.Find(id);
+            var product = _ctx.Product.Find(id);
 
             if(product == null)
             {
@@ -58,6 +58,7 @@ namespace VinothekManagerWeb.Controllers
             {
                 _ctx.Update(product);
                 _ctx.SaveChanges();
+                TempData["success"] = $"{product.Name} wurde bearbeitet.";
                 return RedirectToAction("Index");
             }
             return View(product);
@@ -68,7 +69,7 @@ namespace VinothekManagerWeb.Controllers
             {
                 return NotFound();
             }
-            var product = _ctx.Products.Find(id);
+            var product = _ctx.Product.Find(id);
 
             if (product == null)
             {
@@ -80,12 +81,12 @@ namespace VinothekManagerWeb.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult DeletePost(int? id)
         {
-            var product = _ctx.Products.Find(id);
+            var product = _ctx.Product.Find(id);
             if (product == null)
             {
                 return NotFound();
             }
-            _ctx.Products.Remove(product);
+            _ctx.Product.Remove(product);
             _ctx.SaveChanges();
             TempData["success"] = $"{product.Name} wurde gelöscht.";
             return RedirectToAction("Index");

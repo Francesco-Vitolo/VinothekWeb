@@ -9,7 +9,7 @@ namespace VinothekManagerWeb.Data
         {
         }
 
-        public DbSet<ProductModel> Products{ get; set; }
+        public DbSet<ProductModel> Product { get; set; }
         public DbSet<ProducerModel> Producer { get; set; }
     }
 }

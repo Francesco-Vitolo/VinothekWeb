@@ -12,14 +12,28 @@
             <span asp-validation-for="Name" class="text-danger"></span>
 
             <label asp-for="Art"></label>
-            <input asp-for="Art" class="form-control"/>
+            <select asp-for="Art" class="form-control">
+                @{
+                    foreach(var art in ListOptions.Art)
+                    {
+                        <option value="@art"> @art </option>                        
+                    }
+                }
+            </select>
 
             <label asp-for="Alkoholgehalt"></label>
             <input asp-for="Alkoholgehalt" class="form-control"/>
 
             <label asp-for="Geschmack"></label>
-            <input asp-for="Geschmack" class="form-control"/>
 
+            <select asp-for="Geschmack" class="form-control">
+                @{
+                    foreach(var geschmack in ListOptions.Geschmack)
+                    {
+                        <option value="@geschmack"> @geschmack </option>                        
+                    }
+                }
+            </select>
             <label asp-for="Jahrgang"></label>
             <input asp-for="Jahrgang" class="form-control"/>
 
@@ -27,7 +41,14 @@
             <input asp-for="Preis" class="form-control"/>
 
             <label asp-for="Qualitätssiegel"></label>
-            <input asp-for="Qualitätssiegel" class="form-control"/>
+            <select asp-for="Qualitätssiegel" class="form-control">
+                @{
+                    foreach(var qualität in ListOptions.Qualität)
+                    {
+                        <option value="@qualität"> @qualität </option>                        
+                    }
+                }
+            </select>
 
             <label asp-for="Rebsorten"></label>
             <input asp-for="Rebsorten" class="form-control"/>
