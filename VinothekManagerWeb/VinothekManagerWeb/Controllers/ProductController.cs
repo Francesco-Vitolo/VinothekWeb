@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using VinothekManagerWeb.Core;
 using VinothekManagerWeb.Data;
 using VinothekManagerWeb.Models;
 
@@ -150,6 +151,15 @@ namespace VinothekManagerWeb.Controllers
             }
         }
 
+        public IActionResult CreatePDF(int? id)
+        {
+            string path = Path.Combine(_environment.WebRootPath, "Downloads", "test.pdf");
+            PDF pdf = new PDF();
+            var prod = _ctx.Product.FirstOrDefault(x => x.ProductId == id);
+            byte[] bytes = pdf.Create(prod, path);
+            return File(bytes, System.Net.Mime.MediaTypeNames.Application.Octet, path);
+        }
+            
         byte[] GetFile(string s)
         {
             FileStream fs = System.IO.File.OpenRead(s);
