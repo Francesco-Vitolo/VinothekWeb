@@ -7,10 +7,12 @@ namespace VinothekManagerWeb.Controllers
     public class ProductController : Controller
     {
         private readonly VinothekDbContext _ctx;
+        private IWebHostEnvironment Environment;
 
-        public ProductController(VinothekDbContext ctx)
+        public ProductController(VinothekDbContext ctx, IWebHostEnvironment environment)
         {
             _ctx = ctx;
+            Environment = environment;
         }
         public IActionResult Index()
         {            
@@ -81,9 +83,9 @@ namespace VinothekManagerWeb.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult DeletePost(int? id)
+        public IActionResult DeletePOST(int? ProductId)
         {
-            var product = _ctx.Product.Find(id);
+            var product = _ctx.Product.Find(ProductId);
             if (product == null)
             {
                 return NotFound();
@@ -92,6 +94,42 @@ namespace VinothekManagerWeb.Controllers
             _ctx.SaveChanges();
             TempData["success"] = $"{product.Name} wurde gelöscht.";
             return RedirectToAction("Index");
+        }
+
+        public IActionResult UploadImage(int? id)
+        {
+            if (id == null || id == 0)
+            {
+                return NotFound();
+            }
+            var product = _ctx.Product.Find(id);
+
+            if (product == null)
+            {
+                return NotFound();
+            }
+            return View(product);
+        }
+
+        [HttpPost]
+        public IActionResult UploadImage(IFormFile file, int ProductId)
+        {
+            string path = Path.Combine(Environment.WebRootPath, "Uploads");
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+            string fileName = Path.GetFileName(file.FileName);
+            using (FileStream stream = new FileStream(Path.Combine(path, fileName), FileMode.Create))
+            {
+                file.CopyTo(stream);
+            }
+            ImageModel Img = new ImageModel();
+            Img.ProductId = ProductId;
+            Img.FilePath = fileName;
+            _ctx.Image.Add(Img);
+            _ctx.SaveChanges();
+            return View();        
         }
     }
 }
