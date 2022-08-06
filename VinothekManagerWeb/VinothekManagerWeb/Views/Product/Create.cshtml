@@ -6,10 +6,70 @@
             <h2 class="text-primary"> Produkt hinzufügen </h2>
             <hr/>
         </div>
-          <div class="mb-3">
+         <div class="mb-3">
             <label asp-for="Name"></label>
             <input asp-for="Name" class="form-control"/>
             <span asp-validation-for="Name" class="text-danger"></span>
+
+            <label asp-for="Art"></label>
+            <select asp-for="Art" class="form-select">
+            @{
+                foreach(var art in ViewBag.Art)
+                {
+                        <option value="@art"> @art </option>                        
+                }
+            }
+            </select>            
+
+            <label asp-for="Geschmack"></label>
+            <select asp-for="Geschmack" class="form-select">
+            @{
+                foreach(var geschmack in ViewBag.Geschmack)
+                {
+                  <option value="@geschmack"> @geschmack </option>                        
+                }
+            }
+            </select>           
+
+            <label asp-for="Qualitätssiegel"></label>
+            <select asp-for="Qualitätssiegel" class="form-select">
+            @{
+                foreach(var qualität in ViewBag.Qualitätssiegel)
+                {
+                  <option value="@qualität"> @qualität </option>                        
+                }
+            }
+            </select>
+
+            <label> Erzeuger </label>
+            <select asp-for="Producer.ProducerId" class="form-select">
+            @{
+                foreach(var producer in ViewBag.Producer)
+                {
+                  <option value="@producer.ProducerId"> @producer.Name </option>                        
+                }
+            }
+            </select>
+
+            <label asp-for="Jahrgang"></label>
+            <input asp-for="Jahrgang" class="form-control"/>
+
+            <label asp-for="Preis"></label>
+            <input asp-for="Preis" class="form-control"/>
+
+            <label asp-for="Alkoholgehalt"></label>
+            <input asp-for="Alkoholgehalt" class="form-control"/>
+
+            <label asp-for="Rebsorten"></label>
+            <input asp-for="Rebsorten" class="form-control"/>
+
+            <label asp-for="Beschreibung"></label>
+            <textarea asp-for="Beschreibung" class="form-control"></textarea>
+
+            <label asp-for="Aktiv"></label>
+            <input asp-for="Aktiv" type="checkbox" checked/>            
+            <br/>
+            <input asp-for="Image" type="file">
         </div>
 
         <button type="submit" class="btn btn-primary" style="width:200px"> Speichern </button>
@@ -19,6 +79,6 @@
 
 @section Scripts{
     @{ 
-        <partial name="_ValidationScriptsPartial.cshtml" />
+    <partial name="_ValidationScriptsPartial.cshtml" />
     }
 }

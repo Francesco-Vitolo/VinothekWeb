@@ -13,27 +13,29 @@ namespace VinothekManagerWeb.Controllers
             _ctx = ctx;
         }
         public IActionResult Index()
-        {
+        {            
             IEnumerable<ProductModel> prodList = _ctx.Product.ToList();
             return View(prodList);
         }
 
         public IActionResult Create()
         {
+            ViewBag.Qualitätssiegel = ListOptions.Qualität;
+            ViewBag.Art = ListOptions.Art;
+            ViewBag.Geschmack = ListOptions.Geschmack;
+            ViewBag.Producer = _ctx.Producer.AsQueryable();
             return View();
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Create(ProductModel prod)
         {
-            if (ModelState.IsValid)
-            {
-                _ctx.Product.Add(prod);
-                _ctx.SaveChanges();
-                TempData["success"] = $"{prod.Name} wurde erstellt.";
-                return RedirectToAction("Index");
-            }
-            return View(prod);
+            prod.Producer = _ctx.Producer.FirstOrDefault(x => x.ProducerId == prod.Producer.ProducerId);
+            _ctx.Product.Add(prod);
+            _ctx.SaveChanges();
+            TempData["success"] = $"{prod.Name} wurde erstellt.";
+            return RedirectToAction("Index");
+            //return View(prod);
         }
 
         public IActionResult Edit(int? id)

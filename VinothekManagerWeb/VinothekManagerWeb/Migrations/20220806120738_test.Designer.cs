@@ -12,8 +12,8 @@ using VinothekManagerWeb.Data;
 namespace VinothekManagerWeb.Migrations
 {
     [DbContext(typeof(VinothekDbContext))]
-    [Migration("20220727152909_moin2")]
-    partial class moin2
+    [Migration("20220806120738_test")]
+    partial class test
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -24,13 +24,36 @@ namespace VinothekManagerWeb.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("VinothekManagerWeb.Models.ProducerModel", b =>
+            modelBuilder.Entity("VinothekManagerWeb.Models.ImageModel", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("ImageId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ImageId"), 1L, 1);
+
+                    b.Property<string>("FilePath")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ImageId");
+
+                    b.HasIndex("ProductId")
+                        .IsUnique();
+
+                    b.ToTable("Image");
+                });
+
+            modelBuilder.Entity("VinothekManagerWeb.Models.ProducerModel", b =>
+                {
+                    b.Property<int>("ProducerId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProducerId"), 1L, 1);
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -39,18 +62,18 @@ namespace VinothekManagerWeb.Migrations
                     b.Property<string>("Region")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                    b.HasKey("ProducerId");
 
                     b.ToTable("Producer");
                 });
 
             modelBuilder.Entity("VinothekManagerWeb.Models.ProductModel", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("ProductId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProductId"), 1L, 1);
 
                     b.Property<bool>("Aktiv")
                         .HasColumnType("bit");
@@ -59,6 +82,7 @@ namespace VinothekManagerWeb.Migrations
                         .HasColumnType("float");
 
                     b.Property<string>("Art")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Beschreibung")
@@ -66,6 +90,7 @@ namespace VinothekManagerWeb.Migrations
                         .HasColumnType("nvarchar(300)");
 
                     b.Property<string>("Geschmack")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Jahrgang")
@@ -78,32 +103,51 @@ namespace VinothekManagerWeb.Migrations
                     b.Property<double?>("Preis")
                         .HasColumnType("float");
 
-                    b.Property<int?>("ProducerModelId")
+                    b.Property<int?>("ProducerId")
                         .HasColumnType("int");
 
                     b.Property<string>("Qualitätssiegel")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Rebsorten")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                    b.HasKey("ProductId");
 
-                    b.HasIndex("ProducerModelId");
+                    b.HasIndex("ProducerId");
 
                     b.ToTable("Product");
                 });
 
+            modelBuilder.Entity("VinothekManagerWeb.Models.ImageModel", b =>
+                {
+                    b.HasOne("VinothekManagerWeb.Models.ProductModel", "Product")
+                        .WithOne("Image")
+                        .HasForeignKey("VinothekManagerWeb.Models.ImageModel", "ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("VinothekManagerWeb.Models.ProductModel", b =>
                 {
-                    b.HasOne("VinothekManagerWeb.Models.ProducerModel", null)
+                    b.HasOne("VinothekManagerWeb.Models.ProducerModel", "Producer")
                         .WithMany("Products")
-                        .HasForeignKey("ProducerModelId");
+                        .HasForeignKey("ProducerId");
+
+                    b.Navigation("Producer");
                 });
 
             modelBuilder.Entity("VinothekManagerWeb.Models.ProducerModel", b =>
                 {
                     b.Navigation("Products");
+                });
+
+            modelBuilder.Entity("VinothekManagerWeb.Models.ProductModel", b =>
+                {
+                    b.Navigation("Image");
                 });
 #pragma warning restore 612, 618
         }

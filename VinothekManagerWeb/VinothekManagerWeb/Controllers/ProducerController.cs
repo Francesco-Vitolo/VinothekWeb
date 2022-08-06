@@ -14,7 +14,7 @@ namespace VinothekManagerWeb.Controllers
         }
         public IActionResult Index()
         {
-            IEnumerable<ProducerModel> prodList = _ctx.Producer.ToList();
+            IEnumerable<ProducerModel> prodList = _ctx.Producer.ToList();            
             return View(prodList);
         }
 

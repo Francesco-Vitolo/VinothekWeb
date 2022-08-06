@@ -5,11 +5,11 @@ namespace VinothekManagerWeb.Models
     public class ProducerModel
     {
         [Key]
-        public int Id { get; set; }
+        public int ProducerId { get; set; }
         [Required]
         public string Name { get; set; }
         public string? Region { get; set; } = "";
 
-        public ICollection<ProductModel>? Products { get; set; }        
+        public ICollection<ProductModel>? Products { get; set; }
     }
 }

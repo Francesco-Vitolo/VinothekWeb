@@ -17,11 +17,9 @@
 <table class="table table-bordered table-striped" style="width:100%">
     <thead>
         <tr>
-          <th>Name </th>
           <th>Art </th>
+          <th>Name </th>
           <th>Rebsorten </th>
-          <th>Alkoholgehalt </th>
-          <th>Geschmack </th>
           <th>Jahrgang </th>
           <th>Preis </th>
           <th></th>
@@ -31,17 +29,15 @@
         @foreach(var obj in Model)
         {
             <tr>
-                <td> @obj.Name </td>
                 <td> @obj.Art </td>
+                <td> @obj.Name </td>
                 <td> @obj.Rebsorten </td>
-                <td> @obj.Alkoholgehalt </td>
-                <td> @obj.Geschmack </td>
                 <td> @obj.Jahrgang </td>
                 <td> @obj.Preis </td>
                 <td>
                     <div class="w-75 btn-group" role="group">
-                        <a asp-controller="Product" asp-action="Edit" asp-route-id="@obj.Id" class="btn btn-primary mx-2"> Bearbeiten </a>
-                        <a asp-controller="Product" asp-action="Delete" asp-route-id="@obj.Id" class="btn btn-danger mx-2"> Löschen </a>
+                        <a asp-controller="Product" asp-action="Edit" asp-route-id="@obj.ProductId" class="btn btn-primary mx-2"> Bearbeiten </a>
+                        <a asp-controller="Product" asp-action="Delete" asp-route-id="@obj.ProductId" class="btn btn-danger mx-2"> Löschen </a>
                     </div>
                 </td>
             </tr>

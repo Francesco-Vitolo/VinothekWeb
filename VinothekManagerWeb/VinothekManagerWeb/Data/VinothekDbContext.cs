@@ -11,5 +11,6 @@ namespace VinothekManagerWeb.Data
 
         public DbSet<ProductModel> Product { get; set; }
         public DbSet<ProducerModel> Producer { get; set; }
+        public DbSet<ImageModel> Image { get; set; }
     }
 }
