@@ -7,15 +7,15 @@ namespace VinothekManagerWeb.Controllers
     public class ProductController : Controller
     {
         private readonly VinothekDbContext _ctx;
-        private IWebHostEnvironment Environment;
+        private readonly IWebHostEnvironment _environment;
 
         public ProductController(VinothekDbContext ctx, IWebHostEnvironment environment)
         {
             _ctx = ctx;
-            Environment = environment;
+            _environment = environment;
         }
         public IActionResult Index()
-        {            
+        {
             IEnumerable<ProductModel> prodList = _ctx.Product.ToList();
             return View(prodList);
         }
@@ -42,13 +42,13 @@ namespace VinothekManagerWeb.Controllers
 
         public IActionResult Edit(int? id)
         {
-            if(id == null || id == 0)
+            if (id == null || id == 0)
             {
                 return NotFound();
             }
             var product = _ctx.Product.Find(id);
 
-            if(product == null)
+            if (product == null)
             {
                 return NotFound();
             }
@@ -114,7 +114,7 @@ namespace VinothekManagerWeb.Controllers
         [HttpPost]
         public IActionResult UploadImage(IFormFile file, int ProductId)
         {
-            string path = Path.Combine(Environment.WebRootPath, "Uploads");
+            string path = Path.Combine(_environment.WebRootPath, "Uploads");
             if (!Directory.Exists(path))
             {
                 Directory.CreateDirectory(path);
@@ -124,12 +124,40 @@ namespace VinothekManagerWeb.Controllers
             {
                 file.CopyTo(stream);
             }
-            ImageModel Img = new ImageModel();
-            Img.ProductId = ProductId;
-            Img.FilePath = fileName;
+            ImageModel Img = new ImageModel(fileName);
             _ctx.Image.Add(Img);
+            _ctx.Product.Find(ProductId).Image = Img;
             _ctx.SaveChanges();
-            return View();        
+            return View();
+        }
+
+        public IActionResult DownloadImage(int? id)
+        {
+            var prod = _ctx.Product.FirstOrDefault(x => x.ProductId == id);
+            if (prod.ImageId != null)
+            {
+                ImageModel? Img = _ctx.Image.Find(prod.ImageId);
+                string path = Path.Combine(_environment.WebRootPath, "Uploads");
+                string fullName = Path.Combine(path, Img.FilePath);
+
+                byte[] fileBytes = GetFile(fullName);
+                return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet, prod.Image.FilePath);
+            }
+            else
+            {
+                TempData["success"] = $"Kein Bild vorhanden";
+                return RedirectToAction("Index");
+            }
+        }
+
+        byte[] GetFile(string s)
+        {
+            FileStream fs = System.IO.File.OpenRead(s);
+            byte[] data = new byte[fs.Length];
+            int br = fs.Read(data, 0, data.Length);
+            if (br != fs.Length)
+                throw new IOException(s);
+            return data;
         }
     }
 }

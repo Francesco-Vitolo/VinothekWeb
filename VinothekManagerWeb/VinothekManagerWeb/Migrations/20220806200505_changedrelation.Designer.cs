@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VinothekManagerWeb.Data;
 
@@ -11,9 +12,10 @@ using VinothekManagerWeb.Data;
 namespace VinothekManagerWeb.Migrations
 {
     [DbContext(typeof(VinothekDbContext))]
-    partial class VinothekDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220806200505_changedrelation")]
+    partial class changedrelation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -31,7 +33,6 @@ namespace VinothekManagerWeb.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ImageId"), 1L, 1);
 
                     b.Property<string>("FilePath")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ImageId");
@@ -85,7 +86,7 @@ namespace VinothekManagerWeb.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("ImageId")
+                    b.Property<int>("ImageId")
                         .HasColumnType("int");
 
                     b.Property<int>("Jahrgang")
@@ -111,8 +112,7 @@ namespace VinothekManagerWeb.Migrations
                     b.HasKey("ProductId");
 
                     b.HasIndex("ImageId")
-                        .IsUnique()
-                        .HasFilter("[ImageId] IS NOT NULL");
+                        .IsUnique();
 
                     b.HasIndex("ProducerId");
 
@@ -123,7 +123,9 @@ namespace VinothekManagerWeb.Migrations
                 {
                     b.HasOne("VinothekManagerWeb.Models.ImageModel", "Image")
                         .WithOne("Product")
-                        .HasForeignKey("VinothekManagerWeb.Models.ProductModel", "ImageId");
+                        .HasForeignKey("VinothekManagerWeb.Models.ProductModel", "ImageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("VinothekManagerWeb.Models.ProducerModel", "Producer")
                         .WithMany("Products")

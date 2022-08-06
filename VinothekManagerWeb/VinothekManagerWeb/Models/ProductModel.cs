@@ -46,6 +46,7 @@ namespace VinothekManagerWeb.Models
         public double? Preis { get; set; } = null;
         public bool Aktiv { get; set; } = true;
 
+        public virtual int? ImageId { get; set; } = null;
         public virtual ImageModel? Image { get; set; } = null;
 
         public virtual ProducerModel? Producer { get; set; }
