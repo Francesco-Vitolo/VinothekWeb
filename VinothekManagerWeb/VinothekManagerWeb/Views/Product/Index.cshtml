@@ -40,7 +40,8 @@
                         <a asp-controller="Product" asp-action="Delete" asp-route-id="@obj.ProductId" class="btn btn-danger mx-2"> Löschen </a>
                         <a asp-controller="Product" asp-action="UploadImage" asp-route-id="@obj.ProductId" class="btn btn-secondary mx-2"> Bild hochladen </a>
                         <a asp-controller="Product" asp-action="DownloadImage" asp-route-id="@obj.ProductId" class="btn btn-secondary mx-2"> Bild herunterladen </a>
-                        <a asp-controller="Product" asp-action="CreatePDF" asp-route-id="@obj.ProductId" class="btn btn-secondary mx-2"> PDF Datei herunterladen </a>
+                        <a asp-controller="Product" asp-action="DownloadPDF" asp-route-id="@obj.ProductId" class="btn btn-secondary mx-2"> PDF Datei herunterladen </a>
+                        <a asp-controller="Product" asp-action="ShowPDF" target="_blank" asp-route-id="@obj.ProductId" class="btn btn-secondary mx-2"> PDF Datei anschauen </a>
                     </div>
                 </td>
             </tr>

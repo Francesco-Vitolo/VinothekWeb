@@ -113,6 +113,7 @@ namespace VinothekManagerWeb.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult UploadImage(IFormFile file, int ProductId)
         {
             string path = Path.Combine(_environment.WebRootPath, "Uploads");
@@ -138,8 +139,7 @@ namespace VinothekManagerWeb.Controllers
             if (prod.ImageId != null)
             {
                 ImageModel? Img = _ctx.Image.Find(prod.ImageId);
-                string path = Path.Combine(_environment.WebRootPath, "Uploads");
-                string fullName = Path.Combine(path, Img.FilePath);
+                string fullName = Path.Combine(_environment.WebRootPath, "Uploads", Img.FilePath);
 
                 byte[] fileBytes = GetFile(fullName);
                 return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet, prod.Image.FilePath);
@@ -151,16 +151,29 @@ namespace VinothekManagerWeb.Controllers
             }
         }
 
-        public IActionResult CreatePDF(int? id)
+        public IActionResult DownloadPDF(int? id)
         {
             string path = Path.Combine(_environment.WebRootPath, "Downloads", "test.pdf");
             PDF pdf = new PDF();
             var prod = _ctx.Product.FirstOrDefault(x => x.ProductId == id);
             byte[] bytes = pdf.Create(prod, path);
-            return File(bytes, System.Net.Mime.MediaTypeNames.Application.Octet, path);
+            return File(bytes, System.Net.Mime.MediaTypeNames.Application.Octet, "test.pdf");
         }
-            
-        byte[] GetFile(string s)
+
+        public IActionResult ShowPDF(int? id)
+        {
+            var prod = _ctx.Product.FirstOrDefault(x => x.ProductId == id);
+            if(prod is not null)
+            {
+                string path = Path.Combine(_environment.WebRootPath, "Downloads", "test.pdf");
+                PDF pdf = new PDF();
+                byte[] bytes = pdf.Create(prod, path);
+                return File(bytes, "application/pdf");
+            }
+            return RedirectToAction("Index");
+        }
+
+        private byte[] GetFile(string s)
         {
             FileStream fs = System.IO.File.OpenRead(s);
             byte[] data = new byte[fs.Length];
