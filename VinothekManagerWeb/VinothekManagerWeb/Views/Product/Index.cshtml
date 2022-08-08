@@ -26,22 +26,22 @@
         </tr>
     </thead>
     <tbody>
-        @foreach(var obj in Model)
+        @foreach(var product in Model)
         {
             <tr>
-                <td> @obj.Art </td>
-                <td> @obj.Name </td>
-                <td> @obj.Rebsorten </td>
-                <td> @obj.Jahrgang </td>
-                <td> @obj.Preis </td>
+                <td> @product.Art </td>
+                <td> @product.Name </td>
+                <td> @product.Rebsorten </td>
+                <td> @product.Jahrgang </td>
+                <td> @product.Preis </td>
                 <td>
                     <div class="w-75 btn-group" role="group">
-                        <a asp-controller="Product" asp-action="Edit" asp-route-id="@obj.ProductId" class="btn btn-primary mx-2"> Bearbeiten </a>
-                        <a asp-controller="Product" asp-action="Delete" asp-route-id="@obj.ProductId" class="btn btn-danger mx-2"> Löschen </a>
-                        <a asp-controller="Product" asp-action="UploadImage" asp-route-id="@obj.ProductId" class="btn btn-secondary mx-2"> Bild hochladen </a>
-                        <a asp-controller="Product" asp-action="DownloadImage" asp-route-id="@obj.ProductId" class="btn btn-secondary mx-2"> Bild herunterladen </a>
-                        <a asp-controller="Product" asp-action="DownloadPDF" asp-route-id="@obj.ProductId" class="btn btn-secondary mx-2"> PDF Datei herunterladen </a>
-                        <a asp-controller="Product" asp-action="ShowPDF" target="_blank" asp-route-id="@obj.ProductId" class="btn btn-secondary mx-2"> PDF Datei anschauen </a>
+                        <a asp-controller="Product" asp-action="Edit" asp-route-id="@product.ProductId" class="btn btn-primary mx-2"> Bearbeiten </a>
+                        <a asp-controller="Product" asp-action="Delete" asp-route-id="@product.ProductId" class="btn btn-danger mx-2"> Löschen </a>
+                        <a asp-controller="Product" asp-action="UploadImage" asp-route-id="@product.ProductId" class="btn btn-secondary mx-2"> Bild hochladen </a>
+                        <a asp-controller="Product" asp-action="DownloadImage" asp-route-id="@product.ProductId" class="btn btn-secondary mx-2"> Bild herunterladen </a>
+                        <a asp-controller="Product" asp-action="DownloadPDF" asp-route-id="@product.ProductId" class="btn btn-secondary mx-2"> PDF Datei herunterladen </a>
+                        <a asp-controller="Product" asp-action="ShowPDF" target="_blank" asp-route-id="@product.ProductId" class="btn btn-secondary mx-2"> PDF Datei anschauen </a>
                     </div>
                 </td>
             </tr>

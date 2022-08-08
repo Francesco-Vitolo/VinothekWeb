@@ -16,7 +16,7 @@
             @{
                 foreach(var art in ViewBag.Art)
                 {
-                        <option value="@art"> @art </option>                        
+                   <option value="@art"> @art </option>                        
                 }
             }
             </select>            
@@ -26,7 +26,7 @@
             @{
                 foreach(var geschmack in ViewBag.Geschmack)
                 {
-                  <option value="@geschmack"> @geschmack </option>                        
+                   <option value="@geschmack"> @geschmack </option>                        
                 }
             }
             </select>           
@@ -36,7 +36,7 @@
             @{
                 foreach(var qualität in ViewBag.Qualitätssiegel)
                 {
-                  <option value="@qualität"> @qualität </option>                        
+                   <option value="@qualität"> @qualität </option>                        
                 }
             }
             </select>
@@ -46,7 +46,7 @@
             @{
                 foreach(var producer in ViewBag.Producer)
                 {
-                  <option value="@producer.ProducerId"> @producer.Name </option>                        
+                   <option value="@producer.ProducerId"> @producer.Name </option>                        
                 }
             }
             </select>
@@ -67,7 +67,7 @@
             <textarea asp-for="Beschreibung" class="form-control"></textarea>
 
             <label asp-for="Aktiv"></label>
-            <input asp-for="Aktiv" type="checkbox" checked/>            
+            <input asp-for="Aktiv" type="checkbox" checked/>       
             <br/>
         </div>
 

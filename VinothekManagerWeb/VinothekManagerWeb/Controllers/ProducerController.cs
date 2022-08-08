@@ -14,7 +14,7 @@ namespace VinothekManagerWeb.Controllers
         }
         public IActionResult Index()
         {
-            IEnumerable<ProducerModel> prodList = _ctx.Producer.ToList();            
+            IEnumerable<ProducerModel> prodList = _ctx.Producer.ToList();
             return View(prodList);
         }
 
@@ -31,7 +31,7 @@ namespace VinothekManagerWeb.Controllers
             {
                 _ctx.Producer.Add(prod);
                 _ctx.SaveChanges();
-                TempData["success"] = $"{prod.Name} wurde erstellt.";
+                TempData["notification"] = $"{prod.Name} wurde erstellt.";
                 return RedirectToAction("Index");
             }
             return View(prod);
@@ -59,7 +59,7 @@ namespace VinothekManagerWeb.Controllers
             {
                 _ctx.Update(producer);
                 _ctx.SaveChanges();
-                TempData["success"] = $"{producer.Name} wurde bearbeitet.";
+                TempData["notification"] = $"{producer.Name} wurde bearbeitet.";
 
                 return RedirectToAction("Index");
             }
@@ -81,18 +81,21 @@ namespace VinothekManagerWeb.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult DeletePost(int? id)
+        public IActionResult DeletePost(int? ProducerId)
         {
-            var producer = _ctx.Producer.Find(id);
+            var producer = _ctx.Producer.Find(ProducerId);
             if (producer == null)
             {
                 return NotFound();
             }
+            else if (producer.Products is null)
+            {
+                return RedirectToAction("Index");
+            }
             _ctx.Producer.Remove(producer);
             _ctx.SaveChanges();
-            TempData["success"] = $"{producer.Name} wurde gelöscht.";
+            TempData["notification"] = $"{producer.Name} wurde gelöscht.";
             return RedirectToAction("Index");
         }
-
     }
 }

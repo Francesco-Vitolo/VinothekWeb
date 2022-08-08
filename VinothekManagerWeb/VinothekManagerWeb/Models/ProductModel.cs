@@ -11,7 +11,7 @@ namespace VinothekManagerWeb.Models
         [Key]
         public int ProductId { get; set; }
 
-        [Required(ErrorMessage ="Bitte Namen eingeben")]
+        [Required(ErrorMessage ="Bitte Namen eingeben<br>")]
         public string Name { get; set; }
 
         public string Art { get; set; } = ListOptions.Art[0];
