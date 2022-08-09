@@ -9,15 +9,19 @@ namespace VinothekManagerWeb.Controllers
     {
         private readonly VinothekDbContext _ctx;
         private readonly IWebHostEnvironment _environment;
+        private string PathDownload { get; }
+        private string PathUpload { get; }
 
         public ProductController(VinothekDbContext ctx, IWebHostEnvironment environment)
         {
             _ctx = ctx;
             _environment = environment;
+            PathDownload = Path.Combine(_environment.WebRootPath, "Downloads");
+            PathUpload = Path.Combine(_environment.WebRootPath, "Uploads");
         }
         public IActionResult Index()
         {
-            IEnumerable<ProductModel> prodList = _ctx.Product.ToList();
+            IEnumerable<ProductModel> prodList = _ctx.Product.ToList().OrderBy(x => x.Name);
             return View(prodList);
         }
 
@@ -33,12 +37,10 @@ namespace VinothekManagerWeb.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create(ProductModel prod)
         {
-            prod.Producer = _ctx.Producer.FirstOrDefault(x => x.ProducerId == prod.Producer.ProducerId);
             _ctx.Product.Add(prod);
             _ctx.SaveChanges();
             TempData["notification"] = $"{prod.Name} wurde erstellt.";
             return RedirectToAction("Index");
-            //return View(prod);
         }
 
         public IActionResult Edit(int? id)
@@ -58,8 +60,7 @@ namespace VinothekManagerWeb.Controllers
             }
             if (product.ImageId is not null)
             {
-                var Img = _ctx.Image.Find(product.ImageId);
-                ViewBag.FileName = Img.FilePath;
+                product.Image = _ctx.Image.Find(product.ImageId);
             }
             return View(product);
         }
@@ -102,7 +103,7 @@ namespace VinothekManagerWeb.Controllers
             if (product.ImageId is not null)
             {
                 var Img = _ctx.Image.Find(product.ImageId);
-                FileInfo file = new FileInfo(Path.Combine(_environment.WebRootPath, "Uploads", Img.FilePath));
+                FileInfo file = new FileInfo(Path.Combine(PathUpload, Img.FilePath));
                 file.Delete();
                 _ctx.Image.Remove(Img);
             }
@@ -138,19 +139,17 @@ namespace VinothekManagerWeb.Controllers
                 return View(prod);
             }
 
-            string path = Path.Combine(_environment.WebRootPath, "Uploads");
-            if (!Directory.Exists(path))
-            {
-                Directory.CreateDirectory(path);
-            }
-
+            ImageModel Img = null;
             //DeleteOldImg
-            ImageModel Img = _ctx.Image.Find(prod.ImageId);
-            FileInfo fileInfo = new FileInfo(Path.Combine(_environment.WebRootPath, "Uploads", Img.FilePath));
-            fileInfo.Delete();
+            if (prod.ImageId is not null)
+            {
+                Img = _ctx.Image.Find(prod.ImageId);
+                FileInfo fileInfo = new FileInfo(Path.Combine(PathUpload, Img.FilePath));
+                fileInfo.Delete();
+            }
             //
             string fileName = Path.GetFileName(file.FileName);
-            using (FileStream stream = new FileStream(Path.Combine(path, fileName), FileMode.Create))
+            using (FileStream stream = new FileStream(Path.Combine(PathUpload, fileName), FileMode.Create))
             {
                 file.CopyTo(stream);
             }
@@ -167,7 +166,7 @@ namespace VinothekManagerWeb.Controllers
             if (prod.ImageId != null)
             {
                 ImageModel? Img = _ctx.Image.Find(prod.ImageId);
-                string fullName = Path.Combine(_environment.WebRootPath, "Uploads", Img.FilePath);
+                string fullName = Path.Combine(PathUpload, Img.FilePath);
 
                 byte[] fileBytes = GetFile(fullName);
                 return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet, prod.Image.FilePath);
@@ -190,24 +189,32 @@ namespace VinothekManagerWeb.Controllers
 
         public IActionResult DownloadPDF(int? id)
         {
-            string path = Path.Combine(_environment.WebRootPath, "Downloads", "test.pdf");
-            PDF pdf = new PDF();
-            var prod = _ctx.Product.FirstOrDefault(x => x.ProductId == id);
-            byte[] bytes = pdf.Create(prod, path);
-            return File(bytes, System.Net.Mime.MediaTypeNames.Application.Octet, "test.pdf");
+            byte[] bytes = PdfHandler(id);
+            if (bytes is null)
+                return RedirectToAction("Index");
+            return File(bytes, System.Net.Mime.MediaTypeNames.Application.Octet, "temp.pdf");
         }
 
-        public IActionResult ShowPDF(int? id)
+        private byte[] PdfHandler(int? id)
         {
             var prod = _ctx.Product.FirstOrDefault(x => x.ProductId == id);
-            if(prod is not null)
+            prod.Producer = _ctx.Producer.Find(prod.ProducerId);
+            if (prod is not null)
             {
-                string path = Path.Combine(_environment.WebRootPath, "Downloads", "test.pdf");
+                string path = Path.Combine(PathDownload, "temp.pdf");
                 PDF pdf = new PDF();
-                byte[] bytes = pdf.Create(prod, path);
-                return File(bytes, "application/pdf");
+                prod.Image = _ctx.Image.Find(prod.ImageId);
+                byte[] bytes = pdf.Create(prod, path, PathUpload);
+                return bytes;
             }
-            return RedirectToAction("Index");
+            return null;
+        }
+        public IActionResult ShowPDF(int? id)
+        {          
+            byte[] bytes = PdfHandler(id);
+            if (bytes is null)
+                return RedirectToAction("Index"); 
+            return File(bytes, "application/pdf");
         }
 
     }

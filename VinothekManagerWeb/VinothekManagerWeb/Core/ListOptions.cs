@@ -1,4 +1,4 @@
-﻿namespace VinothekManagerWeb.Models
+﻿namespace VinothekManagerWeb.Core
 {
     public static class ListOptions
     {

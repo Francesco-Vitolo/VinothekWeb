@@ -2,6 +2,7 @@
 
 <form method="post" asp-action="Edit">
     <input asp-for="ProductId" hidden />
+    <input asp-for="ImageId" hidden />
     <div class="border p-3 mt-4">
         <div class="row pb-2">
             <h2 class="text-primary"> Produkt bearbeiten </h2>
@@ -42,8 +43,9 @@
             }
             </select>
 
-            <label> Erzeuger </label>
-            <select asp-for="Producer.ProducerId" class="form-select">
+            <label> Erzeuger </label> 
+            <a asp-controller="Producer" asp-action="Create" class="btn btn-primary"> + </a>
+            <select asp-for="ProducerId" class="form-select">
             @{
                 foreach(var producer in ViewBag.Producer)
                 {
@@ -68,12 +70,12 @@
             <textarea asp-for="Beschreibung" class="form-control"></textarea>
 
             <label asp-for="Aktiv"></label>
-            <input asp-for="Aktiv" type="checkbox" checked/>       
+            <input asp-for="Aktiv" type="checkbox"/>       
             <br/>
             @{
-                if(ViewBag.FileName is not null)
+                if(Model.Image is not null)
                 {                    
-                    <p> Datei: @ViewBag.FileName </p>
+                    <p> Datei: @Model.Image.FilePath </p>
                 }
             }
             

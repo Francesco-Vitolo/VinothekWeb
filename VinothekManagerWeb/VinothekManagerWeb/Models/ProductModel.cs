@@ -3,7 +3,7 @@ namespace VinothekManagerWeb.Models
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-    using VinothekManagerWeb.Models;
+    using VinothekManagerWeb.Core;
 
     public class ProductModel
     {
@@ -49,6 +49,7 @@ namespace VinothekManagerWeb.Models
         public virtual int? ImageId { get; set; } = null;
         public virtual ImageModel? Image { get; set; } = null;
 
+        public virtual int? ProducerId { get; set; } = null;
         public virtual ProducerModel? Producer { get; set; }
     }
 }

@@ -4,6 +4,7 @@ using PdfSharp.Pdf;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using VinothekManagerWeb.Data;
 using VinothekManagerWeb.Models;
 
 
@@ -19,22 +20,23 @@ namespace VinothekManagerWeb.Core
         private XGraphics Gfx { get; set; }
         private ProductModel Prod { get; set; }
         private int PosY { get; set; } = 120;
-        private Random Rand { get; set; }
-        public string filename { get; private set; }
+        public string PathDownload { get; private set; }
+        public string PathUpload { get; private set; }
 
         public PDF()
         {
             Document = new PdfDocument();
             Ueberschrift = new XFont("Garamond", 44, (XFontStyle)4);
             Font = new XFont("Garamond", 20);
-            Rand = new Random();
         }
-        public byte[] Create(ProductModel prod, string filename)
+        public byte[] Create(ProductModel prod, string pathDownload, string pathUpload)
         {
             Prod = prod;
+            PathDownload = pathDownload;
+            PathUpload = pathUpload;
             Create();
-            Document.Save(filename);
-            return File.ReadAllBytes(filename);
+            Document.Save(PathDownload);
+            return File.ReadAllBytes(PathDownload);
         }       
 
         private void Create()
@@ -42,10 +44,20 @@ namespace VinothekManagerWeb.Core
             Page = Document.AddPage();
             Gfx = XGraphics.FromPdfPage(Page);
             Tf = new XTextFormatter(Gfx); //Absatz automatisch
-            PosY = 120;            
+            PosY = 120;
+            if (Prod.ImageId is not null)
+            {                
+                XImage image = XImage.FromFile(Path.Combine(PathUpload,Prod.Image.FilePath));
+                Gfx.DrawImage(image, 460, 100, 90, 300);
+            }
             Gfx.DrawString($"{Prod.Name}", Ueberschrift, XBrushes.Black,
                 new XRect(0, 40, Page.Width, Page.Height), XStringFormats.TopCenter);
             Drawing($"Bezeichnung: {Prod.Qualitätssiegel}");           
+            Drawing($"Erzeuger: {Prod.Producer.Name}");           
+
+            if(Prod.Producer.Region is not null)
+                Drawing($"Region: {Prod.Producer.Region}");           
+
             Drawing($"Jahrgang: {Prod.Jahrgang}");
             Drawing($"Rebsorte(n): {Prod.Rebsorten}");
             Drawing($"Geschmack: {Prod.Geschmack}");

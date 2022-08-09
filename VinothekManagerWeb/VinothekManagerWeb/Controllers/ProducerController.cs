@@ -14,7 +14,7 @@ namespace VinothekManagerWeb.Controllers
         }
         public IActionResult Index()
         {
-            IEnumerable<ProducerModel> prodList = _ctx.Producer.ToList();
+            IEnumerable<ProducerModel> prodList = _ctx.Producer.ToList().OrderBy(x => x.Name);
             return View(prodList);
         }
 
@@ -49,6 +49,9 @@ namespace VinothekManagerWeb.Controllers
             {
                 return NotFound();
             }
+            var Products = _ctx.Product.Where(x => x.ProducerId == producer.ProducerId);
+            if (Products.Count() > 0)
+                ViewBag.Products = Products;
             return View(producer);
         }
         [HttpPost]
@@ -88,8 +91,9 @@ namespace VinothekManagerWeb.Controllers
             {
                 return NotFound();
             }
-            else if (producer.Products is null)
+            else if (_ctx.Product.FirstOrDefault(x => x.ProducerId == ProducerId) is not null)
             {
+                TempData["notification"] = $"{producer.Name} konnte nicht gelöscht werden";
                 return RedirectToAction("Index");
             }
             _ctx.Producer.Remove(producer);

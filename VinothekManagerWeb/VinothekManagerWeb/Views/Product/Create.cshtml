@@ -41,8 +41,8 @@
             }
             </select>
 
-            <label> Erzeuger </label>
-            <select asp-for="Producer.ProducerId" class="form-select">
+            <label> Erzeuger </label>  <a asp-controller="Producer" asp-action="Create" class="btn btn-primary"> +  </a>
+            <select asp-for="ProducerId" class="form-select">
             @{
                 foreach(var producer in ViewBag.Producer)
                 {
