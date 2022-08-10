@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VinothekManagerWeb.Data;
 
@@ -11,9 +12,10 @@ using VinothekManagerWeb.Data;
 namespace VinothekManagerWeb.Migrations
 {
     [DbContext(typeof(VinothekDbContext))]
-    partial class VinothekDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220809231446_addedEvent")]
+    partial class addedEvent
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -24,13 +26,13 @@ namespace VinothekManagerWeb.Migrations
 
             modelBuilder.Entity("EventModelProductModel", b =>
                 {
-                    b.Property<int>("EventsEventId")
+                    b.Property<int>("EventsProductId")
                         .HasColumnType("int");
 
                     b.Property<int>("ProductsProductId")
                         .HasColumnType("int");
 
-                    b.HasKey("EventsEventId", "ProductsProductId");
+                    b.HasKey("EventsProductId", "ProductsProductId");
 
                     b.HasIndex("ProductsProductId");
 
@@ -39,19 +41,19 @@ namespace VinothekManagerWeb.Migrations
 
             modelBuilder.Entity("VinothekManagerWeb.Models.EventModel", b =>
                 {
-                    b.Property<int>("EventId")
+                    b.Property<int>("ProductId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("EventId"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProductId"), 1L, 1);
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("EventId");
+                    b.HasKey("ProductId");
 
-                    b.ToTable("Event");
+                    b.ToTable("EventModel");
                 });
 
             modelBuilder.Entity("VinothekManagerWeb.Models.ImageModel", b =>
@@ -155,7 +157,7 @@ namespace VinothekManagerWeb.Migrations
                 {
                     b.HasOne("VinothekManagerWeb.Models.EventModel", null)
                         .WithMany()
-                        .HasForeignKey("EventsEventId")
+                        .HasForeignKey("EventsProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

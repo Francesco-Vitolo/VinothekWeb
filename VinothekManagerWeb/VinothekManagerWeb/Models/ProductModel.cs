@@ -51,5 +51,8 @@ namespace VinothekManagerWeb.Models
 
         public virtual int? ProducerId { get; set; } = null;
         public virtual ProducerModel? Producer { get; set; }
+
+        public ICollection<EventModel>? Events { get; set; }
+
     }
 }

@@ -216,6 +216,5 @@ namespace VinothekManagerWeb.Controllers
                 return RedirectToAction("Index"); 
             return File(bytes, "application/pdf");
         }
-
     }
 }
