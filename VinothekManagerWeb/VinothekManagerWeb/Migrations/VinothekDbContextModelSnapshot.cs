@@ -22,21 +22,6 @@ namespace VinothekManagerWeb.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("EventModelProductModel", b =>
-                {
-                    b.Property<int>("EventsEventId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProductsProductId")
-                        .HasColumnType("int");
-
-                    b.HasKey("EventsEventId", "ProductsProductId");
-
-                    b.HasIndex("ProductsProductId");
-
-                    b.ToTable("EventModelProductModel");
-                });
-
             modelBuilder.Entity("VinothekManagerWeb.Models.EventModel", b =>
                 {
                     b.Property<int>("EventId")
@@ -52,6 +37,21 @@ namespace VinothekManagerWeb.Migrations
                     b.HasKey("EventId");
 
                     b.ToTable("Event");
+                });
+
+            modelBuilder.Entity("VinothekManagerWeb.Models.EventProductModel", b =>
+                {
+                    b.Property<int>("EventID")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ProductId")
+                        .HasColumnType("int");
+
+                    b.HasKey("EventID", "ProductId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("EventProduct");
                 });
 
             modelBuilder.Entity("VinothekManagerWeb.Models.ImageModel", b =>
@@ -151,19 +151,23 @@ namespace VinothekManagerWeb.Migrations
                     b.ToTable("Product");
                 });
 
-            modelBuilder.Entity("EventModelProductModel", b =>
+            modelBuilder.Entity("VinothekManagerWeb.Models.EventProductModel", b =>
                 {
-                    b.HasOne("VinothekManagerWeb.Models.EventModel", null)
-                        .WithMany()
-                        .HasForeignKey("EventsEventId")
+                    b.HasOne("VinothekManagerWeb.Models.EventModel", "Event")
+                        .WithMany("EventProducts")
+                        .HasForeignKey("EventID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("VinothekManagerWeb.Models.ProductModel", null)
-                        .WithMany()
-                        .HasForeignKey("ProductsProductId")
+                    b.HasOne("VinothekManagerWeb.Models.ProductModel", "Product")
+                        .WithMany("EventProducts")
+                        .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Event");
+
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("VinothekManagerWeb.Models.ProductModel", b =>
@@ -181,6 +185,11 @@ namespace VinothekManagerWeb.Migrations
                     b.Navigation("Producer");
                 });
 
+            modelBuilder.Entity("VinothekManagerWeb.Models.EventModel", b =>
+                {
+                    b.Navigation("EventProducts");
+                });
+
             modelBuilder.Entity("VinothekManagerWeb.Models.ImageModel", b =>
                 {
                     b.Navigation("Product");
@@ -189,6 +198,11 @@ namespace VinothekManagerWeb.Migrations
             modelBuilder.Entity("VinothekManagerWeb.Models.ProducerModel", b =>
                 {
                     b.Navigation("Products");
+                });
+
+            modelBuilder.Entity("VinothekManagerWeb.Models.ProductModel", b =>
+                {
+                    b.Navigation("EventProducts");
                 });
 #pragma warning restore 612, 618
         }

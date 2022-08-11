@@ -1,0 +1,73 @@
+﻿@model EventModel
+
+<form method="post">
+    <div class="border p-3 mt-4">
+        <div class="row pb-2">
+            <h2 class="text-primary"> Event hinzufügen </h2>
+            <hr/>
+        </div>
+        <input asp-for="Name" class="form-control" placeholder="Name"/>
+        <br />
+    <table class="table table-bordered table-striped" style="width:100%">
+        <thead>
+        <tr>
+          <th>Art </th>
+          <th>Name </th>
+          <th>Rebsorten </th>
+          <th>Jahrgang </th>
+          <th>Preis </th>
+          <th> Hinzufügen </th>
+        </tr>
+        </thead>
+        <tbody>
+            @foreach(ProductModel product in  ViewBag.Products)
+            {
+                <tr>
+                    <td> @product.Art </td>
+                    <td> @product.Name </td>
+                    <td> @product.Rebsorten </td>
+                    <td> @product.Jahrgang </td>
+                    <td> @product.Preis </td>
+                    <td> <input type="checkbox" id="@product.ProductId" name="selectedProdIds" value="@product.ProductId"/> </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+        <button type="submit" class="btn btn-primary" style="width:200px"> Speichern </button>
+        <a asp-controller="Event" asp-action="Index" class="btn btn-secondary" style="width:200px"> Zurück zur Übersicht </a>
+    </div>
+
+    
+@*
+    <table class="table table-bordered table-striped" style="width:100%">
+    <thead>
+        <tr>
+          <th>Art </th>
+          <th>Name </th>
+          <th>Rebsorten </th>
+          <th>Jahrgang </th>
+          <th>Preis </th>
+          <th>  </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var product in Model.)
+        {
+            <tr>
+                <td> @product.Art </td>
+                <td> @product.Name </td>
+                <td> @product.Rebsorten </td>
+                <td> @product.Jahrgang </td>
+                <td> @product.Preis </td>
+                <td> </td>
+            </tr>
+        }
+    </tbody>
+</table>*@
+</form>
+
+@section Scripts{
+    @{ 
+    <partial name="_ValidationScriptsPartial.cshtml" />
+    }
+}

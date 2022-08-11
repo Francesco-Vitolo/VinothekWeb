@@ -9,7 +9,7 @@ namespace VinothekManagerWeb.Models
 
         [Required(ErrorMessage = "Bitte Namen eingeben<br>")]
         public string Name { get; set; }
-        public ICollection<ProductModel>? Products { get; set; }
+        public ICollection<EventProductModel>? EventProducts { get; set; }
 
     }
 }

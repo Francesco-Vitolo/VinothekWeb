@@ -21,6 +21,8 @@ namespace VinothekManagerWeb.Models
         public double? Alkoholgehalt { get; set; } = null;
 
         private int _jahrgang;
+
+
         public int Jahrgang
         {
             get { return _jahrgang; }
@@ -52,7 +54,7 @@ namespace VinothekManagerWeb.Models
         public virtual int? ProducerId { get; set; } = null;
         public virtual ProducerModel? Producer { get; set; }
 
-        public ICollection<EventModel>? Events { get; set; }
+        public ICollection<EventProductModel>? EventProducts { get; set; }
 
     }
 }
