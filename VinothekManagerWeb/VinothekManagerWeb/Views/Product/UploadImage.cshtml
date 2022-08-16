@@ -1,8 +1,0 @@
-﻿@model ProductModel
-<partial name=_Notification/>
- <form method="post" enctype="multipart/form-data" asp-controller="Product" asp-action="UploadImage">
-    <input asp-for="ProductId" hidden />
-        <span>Select File:</span>
-        <input type="file" name="file" accept="image/*"/>
-        <input type="submit" value="Upload" />
-</form>

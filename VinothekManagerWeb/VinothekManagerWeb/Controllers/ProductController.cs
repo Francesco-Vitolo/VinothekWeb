@@ -35,14 +35,53 @@ namespace VinothekManagerWeb.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(ProductModel prod)
+        public IActionResult Create(ProductModel prod, IFormFile file)
         {
-            _ctx.Product.Add(prod);
-            _ctx.SaveChanges();
-            TempData["notification"] = $"{prod.Name} wurde erstellt.";
-            return RedirectToAction("Index");
+            ViewBag.Qualitätssiegel = ListOptions.Qualität;
+            ViewBag.Art = ListOptions.Art;
+            ViewBag.Geschmack = ListOptions.Geschmack;
+            ViewBag.Producer = _ctx.Producer.AsQueryable();
+            if (UploadImageHandler(prod, file))
+            {
+                _ctx.Product.Add(prod);
+                _ctx.SaveChanges();
+                TempData["notification"] = $"{prod.Name} wurde erstellt.";
+                return RedirectToAction("Index");
+            }
+            return View(prod);
         }
+        private bool UploadImageHandler(ProductModel prod, IFormFile file)
+        {
+            ImageModel Img = null;
 
+            //DeleteOldImg für EditAction
+            if (prod.ImageId is not null)
+            {
+                Img = _ctx.Image.Find(prod.ImageId);
+                FileInfo fileInfo = new FileInfo(Path.Combine(PathUpload, Img.FilePath));
+                fileInfo.Delete();
+            }
+            //
+
+            if (file is not null)
+            {
+                if (!file.ContentType.Contains("image"))
+                {
+                    TempData["notification"] = "Bitte nur geeignete Dateiformate verwenden";
+                    return false;
+                }
+                string fileName = Path.GetFileName(file.FileName);
+                using (FileStream stream = new FileStream(Path.Combine(PathUpload, fileName), FileMode.Create))
+                {
+                    file.CopyTo(stream);
+                }
+                Img = new ImageModel(fileName);
+                _ctx.Image.Add(Img);
+                _ctx.SaveChanges();
+                prod.ImageId = Img.ImageId;
+            }                      
+            return true;
+        }
         public IActionResult Edit(int? id)
         {
             ViewBag.Qualitätssiegel = ListOptions.Qualität;
@@ -66,16 +105,22 @@ namespace VinothekManagerWeb.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(ProductModel product)
+        public IActionResult Edit(ProductModel product, IFormFile file)
         {
             ViewBag.Qualitätssiegel = ListOptions.Qualität;
             ViewBag.Art = ListOptions.Art;
             ViewBag.Geschmack = ListOptions.Geschmack;
             ViewBag.Producer = _ctx.Producer.AsQueryable();
-            _ctx.Entry(product).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-            _ctx.SaveChanges();
-            TempData["notification"] = $"{product.Name} wurde bearbeitet.";
-            return RedirectToAction("Index");
+
+            if (UploadImageHandler(product, file))
+            {
+                _ctx.Entry(product).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                _ctx.SaveChanges();
+                TempData["notification"] = $"{product.Name} wurde erstellt.";
+                return RedirectToAction("Index");
+            }
+
+            return View(product);
         }
         public IActionResult Delete(int? id)
         {

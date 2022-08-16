@@ -1,6 +1,7 @@
 ﻿@model ProductModel
 
-<form method="post" asp-action="Edit">
+<partial name="_Notification"/>
+<form method="post" asp-action="Edit" enctype="multipart/form-data">
     <input asp-for="ProductId" hidden />
     <input asp-for="ImageId" hidden />
     <div class="border p-3 mt-4">
@@ -78,6 +79,8 @@
                     <p> Datei: @Model.Image.FilePath </p>
                 }
             }
+            <span>Bild hochladen: </span>
+            <input type="file" name="file" accept="image/*"/>
         </div>
 
         <button type="submit" class="btn btn-primary" style="width:200px"> Speichern </button>

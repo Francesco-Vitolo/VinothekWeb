@@ -1,0 +1,49 @@
+﻿@model List<SelectedProductModel>
+
+<form method="post" asp-action="Edit">
+    <input name="EventId" value="@TempData["Id"]" hidden />
+    <div class="border p-3 mt-4">
+        <div class="row pb-2">
+            <h2 class="text-primary"> Event bearbeiten </h2>
+            <hr/>
+        </div>
+        <div class="mb-3">
+            <label> Name </label>
+            <input name="nameEvent" value="@TempData["Name"]" class="form-control"/>
+        </div>
+        <table class="table table-bordered table-striped" style="width:100%">
+        <thead>
+        <tr>
+          <th>Art </th>
+          <th>Name </th>
+          <th>Rebsorten </th>
+          <th>Jahrgang </th>
+          <th>Preis </th>
+          <th> Hinzufügen </th>
+        </tr>
+        </thead>
+        <tbody>
+             @for (var i = 0; i < Model.Count(); i++)
+             {
+                 <tr>
+                 <input asp-for="@Model[i].ProductId" type="hidden" />
+                 <td> @Model[i].Product.Art </td>
+                 <td> @Model[i].Product.Name </td>
+                 <td> @Model[i].Product.Rebsorten </td>
+                 <td> @Model[i].Product.Jahrgang </td>
+                 <td> @Model[i].Product.Preis </td>
+                 <td> <input asp-for="@Model[i].IsSelected" type="checkbox"/> </td>
+                 </tr>
+             }  
+        </tbody>
+    </table>
+        <button type="submit" value="submit" class="btn btn-primary" style="width:200px"> Speichern </button>
+        <a asp-controller="Event" asp-action="Index" class="btn btn-secondary" style="width:200px"> Zurück zur Übersicht </a>
+    </div>
+</form>
+
+@section Scripts{
+    @{ 
+    <partial name="_ValidationScriptsPartial.cshtml" />
+    }
+}
