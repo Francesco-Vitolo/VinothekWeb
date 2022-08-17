@@ -23,21 +23,32 @@ namespace VinothekManagerWeb.Core
         public string PathDownload { get; private set; }
         public string PathUpload { get; private set; }
 
-        public PDF()
+        public PDF(string pathDownload, string pathUpload)
         {
+            PathDownload = pathDownload;
+            PathUpload = pathUpload;
             Document = new PdfDocument();
             Ueberschrift = new XFont("Garamond", 44, (XFontStyle)4);
             Font = new XFont("Garamond", 20);
         }
-        public byte[] Create(ProductModel prod, string pathDownload, string pathUpload)
+        public byte[] Create(ProductModel prod)
         {
             Prod = prod;
-            PathDownload = pathDownload;
-            PathUpload = pathUpload;
             Create();
             Document.Save(PathDownload);
             return File.ReadAllBytes(PathDownload);
-        }       
+        }
+
+        public byte[] CreateFromEvent(EventModel evnt)
+        {
+            foreach(var prod in evnt.EventProducts.Select(x => x.Product))
+            {
+                Prod = prod;
+                Create();
+            }           
+            Document.Save(PathDownload);
+            return File.ReadAllBytes(PathDownload);
+        }
 
         private void Create()
         {
@@ -52,8 +63,11 @@ namespace VinothekManagerWeb.Core
             }
             Gfx.DrawString($"{Prod.Name}", Ueberschrift, XBrushes.Black,
                 new XRect(0, 40, Page.Width, Page.Height), XStringFormats.TopCenter);
-            Drawing($"Bezeichnung: {Prod.Qualitätssiegel}");           
-            Drawing($"Erzeuger: {Prod.Producer.Name}");           
+            Drawing($"Bezeichnung: {Prod.Qualitätssiegel}");
+            if (Prod.Producer is not null)
+            {
+                Drawing($"Erzeuger: {Prod.Producer.Name}");                          
+            }
 
             if(Prod.Producer.Region is not null)
                 Drawing($"Region: {Prod.Producer.Region}");           

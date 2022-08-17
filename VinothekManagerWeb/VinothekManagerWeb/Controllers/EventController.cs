@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using VinothekManagerWeb.Core;
 using VinothekManagerWeb.Data;
 using VinothekManagerWeb.Models;
 
@@ -8,10 +8,15 @@ namespace VinothekManagerWeb.Controllers
     public class EventController : Controller
     {
         private readonly VinothekDbContext _ctx;
-
-        public EventController(VinothekDbContext ctx)
+        private readonly IWebHostEnvironment _environment;
+        private string PathDownload { get; }
+        private string PathUpload { get; }
+        public EventController(VinothekDbContext ctx, IWebHostEnvironment environment)
         {
+            _environment = environment;
             _ctx = ctx;
+            PathDownload = Path.Combine(_environment.WebRootPath, "Downloads");
+            PathUpload = Path.Combine(_environment.WebRootPath, "Uploads");
         }
 
         public IActionResult Index()
@@ -132,6 +137,42 @@ namespace VinothekManagerWeb.Controllers
             _ctx.SaveChanges();
             TempData["notification"] = $"{evnt.Name} wurde gelöscht.";
             return RedirectToAction("Index");
+        }
+
+        public IActionResult DownloadPDF(int? id)
+        {
+            byte[] bytes = PdfHandler(id);
+            if (bytes is null)
+                return RedirectToAction("Index");
+            return File(bytes, System.Net.Mime.MediaTypeNames.Application.Octet, "temp.pdf");
+        }
+
+        private byte[] PdfHandler(int? id)
+        {
+            var evnt = _ctx.Event.Find(id);
+            if (evnt is not null)
+            {
+                evnt.EventProducts = _ctx.EventProduct.Where(x => x.EventID == id).ToList();
+                
+                foreach(var eventProduct in evnt.EventProducts)
+                {
+                    eventProduct.Product = _ctx.Product.FirstOrDefault(x => x.ProductId == eventProduct.ProductId);
+                    eventProduct.Product.Producer = _ctx.Producer.FirstOrDefault(x => x.ProducerId == eventProduct.Product.ProducerId);
+                    eventProduct.Product.Image = _ctx.Image.FirstOrDefault(x => x.ImageId == eventProduct.Product.ImageId);
+                }
+                string path = Path.Combine(PathDownload, "temp.pdf");
+                PDF pdf = new PDF(path, PathUpload);
+                byte[] bytes = pdf.CreateFromEvent(evnt);
+                return bytes;
+            }
+            return null;
+        }
+        public IActionResult ShowPDF(int? id)
+        {
+            byte[] bytes = PdfHandler(id);
+            if (bytes is null)
+                return RedirectToAction("Index");
+            return File(bytes, "application/pdf");
         }
     }
 }

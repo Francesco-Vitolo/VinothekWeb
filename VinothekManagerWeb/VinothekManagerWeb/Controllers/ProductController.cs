@@ -157,54 +157,7 @@ namespace VinothekManagerWeb.Controllers
             TempData["notification"] = $"{product.Name} wurde gelöscht.";
             return RedirectToAction("Index");
         }
-
-        public IActionResult UploadImage(int? id)
-        {
-            if (id == null || id == 0)
-            {
-                return NotFound();
-            }
-            var product = _ctx.Product.Find(id);
-
-            if (product == null)
-            {
-                return NotFound();
-            }
-            return View(product);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult UploadImage(IFormFile file, int ProductId)
-        {
-            var prod = _ctx.Product.Find(ProductId);
-            if (!file.ContentType.Contains("image"))
-            {
-                TempData["notification"] = "Bitte nur geeignete Dateiformate verwenden";
-                return View(prod);
-            }
-
-            ImageModel Img = null;
-            //DeleteOldImg
-            if (prod.ImageId is not null)
-            {
-                Img = _ctx.Image.Find(prod.ImageId);
-                FileInfo fileInfo = new FileInfo(Path.Combine(PathUpload, Img.FilePath));
-                fileInfo.Delete();
-            }
-            //
-            string fileName = Path.GetFileName(file.FileName);
-            using (FileStream stream = new FileStream(Path.Combine(PathUpload, fileName), FileMode.Create))
-            {
-                file.CopyTo(stream);
-            }
-            Img = new ImageModel(fileName);
-            _ctx.Image.Add(Img);
-            _ctx.SaveChanges();
-            prod.ImageId = Img.ImageId;
-            _ctx.SaveChanges();
-            return RedirectToAction("Index");
-        }
+        
         public IActionResult DownloadImage(int? id)
         {
             var prod = _ctx.Product.FirstOrDefault(x => x.ProductId == id);
@@ -247,9 +200,9 @@ namespace VinothekManagerWeb.Controllers
             if (prod is not null)
             {
                 string path = Path.Combine(PathDownload, "temp.pdf");
-                PDF pdf = new PDF();
+                PDF pdf = new PDF(path, PathUpload);
                 prod.Image = _ctx.Image.Find(prod.ImageId);
-                byte[] bytes = pdf.Create(prod, path, PathUpload);
+                byte[] bytes = pdf.Create(prod);
                 return bytes;
             }
             return null;
