@@ -67,13 +67,13 @@ namespace VinothekManagerWeb.Controllers
             {
                 if(_ctx.EventProduct.Any(x => x.EventID == evnt.EventId && x.ProductId == product.ProductId))
                 {
-                    SelectedProductModel s = new SelectedProductModel(product, true);
-                    list.Add(s);
+                    SelectedProductModel prod = new SelectedProductModel(product, true);
+                    list.Add(prod);
                 }
                 else
                 {
-                    SelectedProductModel s = new SelectedProductModel(product, false);
-                    list.Add(s);
+                    SelectedProductModel prod = new SelectedProductModel(product, false);
+                    list.Add(prod);
                 }
             }
             return View(list);
@@ -91,17 +91,46 @@ namespace VinothekManagerWeb.Controllers
                 EventProductModel eventProduct = new EventProductModel();
                 eventProduct.Product = _ctx.Product.Find(product.ProductId);
                 eventProduct.Event = evnt;
-                if (product.IsSelected is true && !(_ctx.EventProduct.Any(x => x.EventID == EventId && x.ProductId == product.ProductId)))
+                if (product.IsSelected is true && !_ctx.EventProduct.Any(x => x.EventID == EventId && x.ProductId == product.ProductId))
                 {
                     _ctx.EventProduct.Add(eventProduct);
                 }
-                else if(_ctx.EventProduct.Any(x => x.EventID == EventId && x.ProductId == product.ProductId && !product.IsSelected))
+                else if(product.IsSelected is false && _ctx.EventProduct.Any(x => x.EventID == EventId && x.ProductId == product.ProductId))
                 {
                     _ctx.EventProduct.Remove(eventProduct);
                 }
             }                      
             _ctx.Event.Update(evnt);
             _ctx.SaveChanges();
+            return RedirectToAction("Index");
+        }
+
+        public IActionResult Delete(int? id)
+        {
+            if (id == null || id == 0)
+            {
+                return NotFound();
+            }
+            var evnt = _ctx.Event.Find(id);
+
+            if (evnt == null)
+            {
+                return NotFound();
+            }
+            return View(evnt);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult DeletePOST(int? eventId)
+        {
+            var evnt = _ctx.Event.Find(eventId);
+            if (evnt == null)
+            {
+                return NotFound();
+            }
+            _ctx.Event.Remove(evnt);
+            _ctx.SaveChanges();
+            TempData["notification"] = $"{evnt.Name} wurde gelöscht.";
             return RedirectToAction("Index");
         }
     }
