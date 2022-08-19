@@ -1,17 +1,20 @@
-﻿@model IEnumerable<ProductModel>
+﻿@model VinothekManagerWeb.ViewModels.ProductIndexViewModel
 @{
     ViewData["Title"] = "Index";
 }
 
 <partial name="_Notification"/>
+ <form method="post">     
 <div class="container p-3">
     <div class="row p-4">
         <div class="col-6">
             <h2 class="text-primary"> Liste Produkte </h2>
         </div>
         <div class="col-6 text-end">
-            <a asp-controller="Product" asp-action="Create" class="btn btn-primary"> Produkt hinzufügen </a>
-        </div>
+            <a asp-controller="Product" asp-action="Create" class="btn btn-primary"> Produkt hinzufügen </a>                 
+        </div>    
+        <div class="col-6 text-end">
+                  </div>
     </div>
     <br/>
 <table class="table table-bordered table-striped" style="width:100%">
@@ -22,11 +25,19 @@
           <th>Rebsorten </th>
           <th>Jahrgang </th>
           <th>Preis </th>
-          <th>  </th>
+          <th>
+              <select asp-for="OrderBy" class="form-select-sm">
+                <option value="Name"> Name </option>
+                <option value="Art"> Art </option>
+                <option value="Jahrgang"> Jahrgang </option>
+              </select>
+              <input type="checkbox" asp-for="IsDescending" class="text-end"/> <label> absteigend </label>
+              <button type="submit" class="btn btn-secondary" style="width:200px"> <i class="bi bi-arrow-clockwise"></i> </button> 
+        </th>
         </tr>
     </thead>
     <tbody>
-        @foreach(var product in Model)
+        @foreach(var product in Model.Products)
         {
             <tr>
                 <td> @product.Art </td>
@@ -35,16 +46,15 @@
                 <td> @product.Jahrgang </td>
                 <td> @product.Preis </td>
                 <td>
-                    <div class="w-75 btn-group" role="group">
-                        <a asp-controller="Product" asp-action="Edit" asp-route-id="@product.ProductId" class="btn btn-primary mx-2"> Bearbeiten </a>
-                        <a asp-controller="Product" asp-action="Delete" asp-route-id="@product.ProductId" class="btn btn-danger mx-2"> Löschen </a>
-                        <a asp-controller="Product" asp-action="DownloadImage" asp-route-id="@product.ProductId" class="btn btn-secondary mx-2"> Bild herunterladen </a>
-                        <a asp-controller="Product" asp-action="DownloadPDF" asp-route-id="@product.ProductId" class="btn btn-secondary mx-2"> PDF Datei herunterladen </a>
-                        <a asp-controller="Product" asp-action="ShowPDF" target="_blank" asp-route-id="@product.ProductId" class="btn btn-secondary mx-2"> PDF Datei anschauen </a>
-                    </div> 
+                    <a asp-controller="Product" asp-action="Edit" asp-route-id="@product.ProductId" class="btn btn-primary mx-2"> <i class="bi bi-pencil"></i> </a>                              
+                    <a asp-controller="Product" asp-action="Delete" asp-route-id="@product.ProductId" class="btn btn-danger mx-2"> <i class="bi bi-trash"></i> </a>                                
+                    <a asp-controller="Product" asp-action="DownloadImage" asp-route-id="@product.ProductId" class="btn btn-secondary mx-2"> <i class="bi bi-file-image"></i> </a>           
+                    <a asp-controller="Product" asp-action="DownloadPDF" asp-route-id="@product.ProductId" class="btn btn-secondary mx-2"> <i class="bi bi-download"></i> </a>        
+                    <a asp-controller="Product" asp-action="ShowPDF" target="_blank" asp-route-id="@product.ProductId" class="btn btn-secondary mx-2"> <i class="bi bi-filetype-pdf"></i> </a>
                 </td>
             </tr>
         }
     </tbody>
 </table>
 </div>
+</form>

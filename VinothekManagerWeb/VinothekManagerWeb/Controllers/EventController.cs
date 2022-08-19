@@ -67,17 +67,17 @@ namespace VinothekManagerWeb.Controllers
             TempData["Name"] = evnt.Name;
             var prods = _ctx.Product.ToList();
             var eventProducts = _ctx.EventProduct.Where(x => x.EventID == evnt.EventId).Select(x => x.ProductId);
-            List<SelectedProductModel> list = new List<SelectedProductModel>();
+            List<SelectedProductViewModel> list = new List<SelectedProductViewModel>();
             foreach(var product in prods)
             {
                 if(_ctx.EventProduct.Any(x => x.EventID == evnt.EventId && x.ProductId == product.ProductId))
                 {
-                    SelectedProductModel prod = new SelectedProductModel(product, true);
+                    SelectedProductViewModel prod = new SelectedProductViewModel(product, true);
                     list.Add(prod);
                 }
                 else
                 {
-                    SelectedProductModel prod = new SelectedProductModel(product, false);
+                    SelectedProductViewModel prod = new SelectedProductViewModel(product, false);
                     list.Add(prod);
                 }
             }
@@ -86,7 +86,7 @@ namespace VinothekManagerWeb.Controllers
         
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(List<SelectedProductModel> products, string nameEvent, int EventId)
+        public IActionResult Edit(List<SelectedProductViewModel> products, string nameEvent, int EventId)
         {
             var evnt = _ctx.Event.Find(EventId);
             evnt.Name = nameEvent;

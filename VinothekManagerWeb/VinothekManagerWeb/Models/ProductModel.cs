@@ -20,28 +20,7 @@ namespace VinothekManagerWeb.Models
         public string Geschmack { get; set; } = ListOptions.Geschmack[0];
         public double? Alkoholgehalt { get; set; } = null;
 
-        private int _jahrgang;
-
-
-        public int Jahrgang
-        {
-            get { return _jahrgang; }
-            set
-            {
-                if (value < 1900)
-                {
-                    _jahrgang = 1900;
-                }
-                else if (value > DateTime.Now.Year)
-                {
-                    _jahrgang = DateTime.Now.Year;
-                }
-                else
-                {
-                    _jahrgang = value;
-                }
-            }
-        }
+        public int? Jahrgang { get; set; } = null;
 
         [MaxLength(300)]
         public string? Beschreibung { get; set; } = null;

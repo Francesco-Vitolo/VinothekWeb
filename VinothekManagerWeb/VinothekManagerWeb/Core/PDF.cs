@@ -1,10 +1,6 @@
 ﻿using PdfSharp.Drawing;
 using PdfSharp.Drawing.Layout;
 using PdfSharp.Pdf;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using VinothekManagerWeb.Data;
 using VinothekManagerWeb.Models;
 
 

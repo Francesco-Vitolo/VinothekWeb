@@ -29,10 +29,10 @@
                 <td> @obj.Name </td>
                 <td>
                     <div class="w-75 btn-group" role="group">
-                        <a asp-controller="Event" asp-action="Edit" asp-route-id="@obj.EventId" class="btn btn-primary mx-2"> Bearbeiten </a>
-                        <a asp-controller="Event" asp-action="Delete" asp-route-id="@obj.EventId" class="btn btn-danger mx-2"> Löschen </a>
-                        <a asp-controller="Event" asp-action="DownloadPDF" asp-route-id="@obj.EventId" class="btn btn-secondary mx-2"> PDF Datei herunterladen </a>
-                        <a asp-controller="Event" asp-action="ShowPDF" target="_blank" asp-route-id="@obj.EventId" class="btn btn-secondary mx-2"> PDF Datei anschauen </a>
+                        <a asp-controller="Event" asp-action="Edit" asp-route-id="@obj.EventId" class="btn btn-primary mx-2"> <i class="bi bi-pencil"></i> </a>
+                        <a asp-controller="Event" asp-action="Delete" asp-route-id="@obj.EventId" class="btn btn-danger mx-2"> <i class="bi bi-trash"></i> </a>
+                        <a asp-controller="Event" asp-action="DownloadPDF" asp-route-id="@obj.EventId" class="btn btn-secondary mx-2"> <i class="bi bi-download"></i> </a>
+                        <a asp-controller="Event" asp-action="ShowPDF" target="_blank" asp-route-id="@obj.EventId" class="btn btn-secondary mx-2"> <i class="bi bi-filetype-pdf"></i> </a>
 
                     </div>
                 </td>

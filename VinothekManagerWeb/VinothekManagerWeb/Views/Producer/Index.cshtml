@@ -24,15 +24,17 @@
         </tr>
     </thead>
     <tbody>
-        @foreach(var obj in Model)
+        @foreach(var producer in Model)
         {
             <tr>
-                <td> @obj.Name </td>
-                <td> @obj.Region </td>
+                <td> @producer.Name </td>
+                <td> @producer.Region </td>
+                <td> @producer.Email </td>
+                <td> @producer.Telefon </td>
                 <td>
                     <div class="w-75 btn-group" role="group">
-                        <a asp-controller="Producer" asp-action="Edit" asp-route-id="@obj.ProducerId" class="btn btn-primary mx-2"> Bearbeiten </a>
-                        <a asp-controller="Producer" asp-action="Delete" asp-route-id="@obj.ProducerId" class="btn btn-danger mx-2"> Löschen </a>
+                        <a asp-controller="Producer" asp-action="Edit" asp-route-id="@producer.ProducerId" class="btn btn-primary mx-2"> <i class="bi bi-pencil"></i> </a>
+                        <a asp-controller="Producer" asp-action="Delete" asp-route-id="@producer.ProducerId" class="btn btn-danger mx-2"> <i class="bi bi-trash"></i> </a>
                     </div>
                 </td>
             </tr>

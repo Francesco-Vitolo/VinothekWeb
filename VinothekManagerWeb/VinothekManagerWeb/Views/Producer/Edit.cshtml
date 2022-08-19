@@ -13,10 +13,20 @@
 
             <label asp-for="Region"></label>
             <input asp-for="Region" class="form-control"/>
+
+            <label asp-for="Email"></label>
+            <input asp-for="Email" class="form-control"/>
+
+            <label asp-for="Telefon"></label>
+            <input asp-for="Telefon" class="form-control"/>
+
+            <label asp-for="Adresse"></label>
+            <input asp-for="Adresse" class="form-control"/>
         </div>
         @{
             if (ViewBag.Products is not null)
             {
+                <h2> Produkte des Erzeugers  </h2>
                 <table class="table table-bordered table-striped" style="width:100%">
                     <thead>
                         <tr>

@@ -2,6 +2,7 @@
 using VinothekManagerWeb.Core;
 using VinothekManagerWeb.Data;
 using VinothekManagerWeb.Models;
+using VinothekManagerWeb.ViewModels;
 
 namespace VinothekManagerWeb.Controllers
 {
@@ -22,7 +23,31 @@ namespace VinothekManagerWeb.Controllers
         public IActionResult Index()
         {
             IEnumerable<ProductModel> prodList = _ctx.Product.ToList().OrderBy(x => x.Name);
-            return View(prodList);
+            ProductIndexViewModel viewModel = new ProductIndexViewModel(prodList);
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        public IActionResult Index(ProductIndexViewModel viewModel)
+        {
+            if (viewModel.OrderBy == "Art")
+            {
+                viewModel.Products = _ctx.Product.ToList().OrderBy(x => x.Art);
+            }
+            else if (viewModel.OrderBy == "Jahrgang")
+            {
+                viewModel.Products = _ctx.Product.ToList().OrderBy(x => x.Jahrgang);
+            }
+            else
+            {
+                viewModel.Products = _ctx.Product.ToList().OrderBy(x => x.Name);
+            }
+
+            if(viewModel.IsDescending)
+            {
+                viewModel.Products = viewModel.Products.Reverse();
+            }
+            return View(viewModel);
         }
 
         public IActionResult Create()
